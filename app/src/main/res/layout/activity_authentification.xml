@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/codeVisiteur"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Code Visiteur"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:layout_marginTop="16dp" />
+
+    <LinearLayout
+        android:id="@+id/temporaryCodeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/nomVisiteur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nom Visiteur"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/codeTemporaire"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Code"
+            android:inputType="text"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/envoye"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Envoyé"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+
+</LinearLayout>

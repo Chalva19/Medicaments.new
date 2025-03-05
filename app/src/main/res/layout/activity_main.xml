@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    >
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <!-- Champ pour la  Dénomination du médicament -->
+    <EditText
+        android:id="@+id/editTextDenomination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Dénomination du médicament"
+        android:inputType="text" />
+
+    <!-- Champ pour la forme pharmaceutique -->
+    <EditText
+        android:id="@+id/editTextFormePharmaceutique"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Forme pharmaceutique"
+        android:inputType="text"
+        android:layout_below="@id/editTextDenomination"
+        android:layout_marginTop="8dp" />
+
+    <!-- Champ pour les titulaires -->
+    <EditText
+        android:id="@+id/editTextTitulaires"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Titulaire"
+        android:inputType="text"
+        android:layout_below="@id/editTextFormePharmaceutique"
+        android:layout_marginTop="8dp" />
+
+    <!-- Champ pour la dénomination de substance -->
+    <EditText
+        android:id="@+id/editTextDenominationSubstance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Dénomination de substance"
+        android:inputType="text"
+        android:layout_below="@id/editTextTitulaires"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/editTextDateAutorisation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date d'autorisation de sortit"
+        android:inputType="text"
+        android:layout_below="@id/editTextDenominationSubstance"
+        android:layout_marginTop="8dp" />
+
+    <!-- Spinner pour les voies d'administration -->
+    <Spinner
+        android:id="@+id/spinnerVoiesAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextDateAutorisation"
+        android:layout_marginTop="8dp" />
+
+    <!-- Bouton de recherche -->
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rechercher"
+        android:layout_below="@id/spinnerVoiesAdmin"
+        android:layout_marginTop="16dp" />
+
+
+    <!-- Liste des résultats -->
+    <ListView
+        android:id="@+id/listViewResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSearch"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Déconnexion"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"/>
+</LinearLayout>
