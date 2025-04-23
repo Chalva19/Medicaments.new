@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 
 public class Authentification extends AppCompatActivity {
@@ -23,12 +24,12 @@ public class Authentification extends AppCompatActivity {
     private static final String KEY_USER_NAME = "username";
     private static final String KEY_USER_STATUS = "userStatus";
     private static final String USER_STATUS_OK = "Authentifié";
-
+    private static final String SECURETOKEN = "euroforma@5785";
     private EditText editTextCodeVisiteur, editTextCleTemporaire, editTextUsername;
     private Button btnEnvoyerCode, btnValiderCle;
     private TextView textViewInfo;
     private String SecureKey;
-
+    private WebServiceCaller webServiceCaller;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,11 +120,23 @@ public class Authentification extends AppCompatActivity {
         //editTextUsername.setVisibility(View.VISIBLE);
         LinearLayout temporaryCodeLayout = findViewById(R.id.temporaryCodeLayout);
         temporaryCodeLayout.setVisibility(View.VISIBLE);
+        editTextCleTemporaire.setEnabled(true);
         editTextCleTemporaire.setVisibility(View.VISIBLE);  // Rend le champ non modifiable
-        editTextCleTemporaire.setEnabled(false);    // Désactive l'édition
-        editTextCleTemporaire.setText(SecureKey);
+
 
         btnValiderCle.setVisibility(View.VISIBLE);
+
+        // Vous pouvez maintenant utiliser la méthode sendKeyByEmail
+        // avec le codeV, secureKey, et token comme paramètres
+        
+        Log.d("CODE", SecureKey);
+        webServiceCaller = new WebServiceCaller(this);
+        // NomUtilisateur.setText(secureKey);
+        String token = SECURETOKEN;
+        // SendKeyTask sendEmail = new SendKeyTask(getApplicationContext());
+        appellerWebService(codeVisiteur, SecureKey);
+        // sendEmail.execute(codeV, secureKey, token);
+
 
     }
     public void clickOk(View v) {
@@ -151,6 +164,69 @@ public class Authentification extends AppCompatActivity {
             toast.show();
         }
     }
+    private String sha256(String input) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(input.getBytes("UTF-8"));
 
+            StringBuilder hex = new StringBuilder();
+            for (byte b : hash) hex.append(String.format("%02x", b));
+            return hex.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // ou tu peux retourner "" ou un message d'erreur
+        }
+    }
+    private void affiche(String msg) {
+
+        Toast toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+        toast.show();
+
+    }
+    private void appellerWebService(String CV, String SK) {
+        // Paramètres pour l'appel
+        String url = "https://auth.euroforma.site/authent2.php";
+
+        String codeVisiteur = CV;
+        String cleAuthent = SK;
+
+        // Appel au webservice via la classe WebServiceCaller
+        String key = sha256(cleAuthent + codeVisiteur + SECURETOKEN);
+
+        webServiceCaller.appelWebService(
+                url,
+                key,
+                codeVisiteur,
+                cleAuthent,
+                new WebServiceCaller.WebServiceCallback() {
+                    @Override
+                    public void onSuccess(String jsonResponse) {
+                        // Affichage du JSON reçu dans un toast
+                        affiche(jsonResponse);
+
+                        // Décommentez ce bloc pour traiter le JSON
+                /*
+                try {
+                    JSONObject jsonObject = new JSONObject(jsonResponse);
+                    // Traitement du JSON ici
+                } catch (JSONException e) {
+                    Toast.makeText(
+                        MainActivity.this,
+                        "Erreur de traitement JSON: " + e.getMessage(),
+                        Toast.LENGTH_SHORT
+                    ).show();
+                }
+                */
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Affichage du message d'erreur dans un toast
+                        affiche("Erreur: " + errorMessage);
+                    }
+                }
+        );
+    }
 
 }
