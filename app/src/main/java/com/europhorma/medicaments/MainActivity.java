@@ -1,13 +1,12 @@
 package com.europhorma.medicaments;
 
-
+// Importation des classes nécessaires
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -18,11 +17,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.europhorma.medicaments.DatabaseHelper;
 import com.europhorma.medicaments.R;
@@ -33,24 +28,22 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    /*MedicamentAdapter adapter;*/
+    // Déclaration des variables
     DatabaseHelper dbm;
     ListView listview;
     Spinner spinnerVoiesAdmin;
-    Button btnSearch;
-    Button btnLogout;
-    EditText editTextDenominationSubstance;
-    EditText editTextTitulaires;
-    EditText editTextFormePharmaceutique;
-    EditText editTextDenomination;
-    EditText editTextDateAutorisation;
+    Button btnSearch, btnLogout;
+    EditText editTextDenominationSubstance, editTextTitulaires, editTextFormePharmaceutique,
+            editTextDenomination, editTextDateAutorisation;
     ListView listViewResults;
+
+    // Constantes pour la gestion de la session utilisateur
     private static final String PREF_NAME = "UserPrefs";
     private static final String KEY_USER_NAME = "username";
     private static final String KEY_USER_STATUS = "userStatus";
     private static final String USER_STATUS_OK = "Authentifié";
 
+    // Méthode pour supprimer les données de connexion
     private void resetUserStatus() {
         SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -58,17 +51,22 @@ public class MainActivity extends AppCompatActivity {
         editor.remove(KEY_USER_NAME);
         editor.apply();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Si l'utilisateur n'est pas connecté, on le redirige vers l'écran de connexion
         if (!isUserAuthenticated()) {
-            // Si l'utilisateur n'est pas authentifié, redirigez vers l'écran de connexion
             Intent intent = new Intent(this, Authentification.class);
             startActivity(intent);
-            finish(); // Ferme l'activité courante
+            finish(); // ferme l'activité actuelle
             return;
         }
+
         setContentView(R.layout.activity_main);
+
+        // Configuration du bouton de déconnexion
         Button btnLogout  = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,9 +75,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Initialisation de la base de données
         dbm = new DatabaseHelper(this);
 
-        // Initialisation du Spinner
+        // Initialisation des éléments de l'interface
         spinnerVoiesAdmin = findViewById(R.id.spinnerVoiesAdmin);
         btnSearch = findViewById(R.id.btnSearch);
         editTextDenominationSubstance = findViewById(R.id.editTextDenominationSubstance);
@@ -87,104 +86,97 @@ public class MainActivity extends AppCompatActivity {
         editTextDenomination = findViewById(R.id.editTextDenomination);
         editTextFormePharmaceutique = findViewById(R.id.editTextFormePharmaceutique);
         editTextDateAutorisation = findViewById(R.id.editTextDateAutorisation);
-        listViewResults =  findViewById(R.id.listViewResults);
+        listViewResults = findViewById(R.id.listViewResults);
+
+        // Remplissage du spinner avec les voies d'administration
         setupVoiesAdminSpinner();
-        //performSearch();
+
+        // Action au clic du bouton "Rechercher"
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 performSearch();
             }
         });
+
+        // Action au clic sur un médicament : affichage de la composition
         listViewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // Get the selected item
                 Medicament selectedMedicament = (Medicament) adapterView.getItemAtPosition(position);
-                // Show composition of the selected medicament
                 afficherCompositionMedicament(selectedMedicament);
             }
         });
     }
 
+    // Remplit le spinner avec les voies d'administration distinctes
     private void setupVoiesAdminSpinner() {
         List<String> voiesAdminList = dbm.getDistinctVoiesAdmin();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, voiesAdminList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerVoiesAdmin.setAdapter(spinnerAdapter);
     }
+
+    // Lance la recherche des médicaments selon les critères
     private void performSearch() {
-        // TODO: Implement the search logic using the entered criteria and update the ListView
         String denomination = editTextDenomination.getText().toString().trim();
         String formePharmaceutique = editTextFormePharmaceutique.getText().toString().trim();
         String titulaires = editTextTitulaires.getText().toString().trim();
         String denominationSubstance = removeAccents(editTextDenominationSubstance.getText().toString().trim());
         String dateAutorisation = editTextDateAutorisation.getText().toString().trim();
         String voiesAdmin = spinnerVoiesAdmin.getSelectedItem().toString();
-        MedicamentAdapter medicamentAdapter;
-        cacherClavier();
 
-        // TODO: Use dbHelper to fetch search results and update the ListView
+        cacherClavier(); // Ferme le clavier après clic
+
+        // Récupère les résultats depuis la BDD
         List<Medicament> searchResults = dbm.searchMedicaments(denomination, formePharmaceutique, titulaires, denominationSubstance, voiesAdmin, dateAutorisation);
-//dbHelper.writeToLogFile("test");
-        // TODO: Create and set an adapter for the ListView to display search results
-        medicamentAdapter = new MedicamentAdapter(this, searchResults);
+
+        // Affiche les résultats dans la ListView via un adapter personnalisé
+        MedicamentAdapter medicamentAdapter = new MedicamentAdapter(this, searchResults);
         listViewResults.setAdapter(medicamentAdapter);
+
+        // Gère les clics sur le bouton Composition
         medicamentAdapter.setOnButtonCClickListener(new MedicamentAdapter.OnButtonCClickListener() {
             @Override
             public void onButtonCClick(Medicament medicament) {
-                // Votre logique ici
                 afficherCompositionMedicament(medicament);
             }
         });
+
+        // Gère les clics sur le bouton Présentation
         medicamentAdapter.setOnButtonPClickListener(new MedicamentAdapter.OnButtonPClickListener() {
             @Override
             public void onButtonPClick(Medicament medicament) {
-                // Votre logique ici
                 afficherPresentationMedicament(medicament);
             }
         });
     }
 
+    // Cache le clavier virtuel
     private void cacherClavier() {
-        // Obtenez le gestionnaire de fenêtre
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // Obtenez la vue actuellement focalisée, qui devrait être la vue avec le clavier
         View vueCourante = getCurrentFocus();
-
-        // Vérifiez si la vue est non nulle pour éviter les erreurs
         if (vueCourante != null) {
-            // Masquez le clavier
             imm.hideSoftInputFromWindow(vueCourante.getWindowToken(), 0);
         }
     }
-    private String getEditTextValue(int editTextId) {
-        EditText editText = findViewById(editTextId);
-        return (editText.getText() != null) ? editText.getText().toString().trim() : "";
-    }
+
+    // Supprime les accents d’une chaîne de caractères (pour éviter les erreurs de recherche)
     private String removeAccents(String input) {
-        if (input == null) {
-            return null;
-        }
-
-        // Normalisation en forme de décomposition (NFD)
+        if (input == null) return null;
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-
-        // Remplacement des caractères diacritiques
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("");
     }
+
+    // Vérifie si l'utilisateur est connecté
     private boolean isUserAuthenticated() {
-
         SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-
-        // SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String userStatus = preferences.getString(KEY_USER_STATUS, "");
-
-        // Vérifiez si la chaîne d'état de l'utilisateur est "authentification=OK"
         return USER_STATUS_OK.equals(userStatus);
     }
+
+    // Affiche une boîte de confirmation pour la déconnexion
     void showLogoutConfirmationDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Déconnexion")
@@ -192,93 +184,65 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Logique de déconnexion
-                        logout();
+                        logout(); // Déconnecte
                     }
                 })
-                .setNegativeButton("Non", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Annuler la déconnexion
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton("Non", null)
                 .show();
     }
+
+    // Supprime les infos de session et redirige vers l'authentification
     private void logout() {
-        // Effacer le statut de connexion
         SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(KEY_USER_STATUS);
         editor.remove(KEY_USER_NAME);
         editor.apply();
 
-        // Rediriger vers l'écran d'authentification
-        Intent LogoutIntent = new Intent(MainActivity.this,Authentification.class);
+        Intent LogoutIntent = new Intent(MainActivity.this, Authentification.class);
         startActivity(LogoutIntent);
-        finish(); // Ferme l'activité actuelle
+        finish();
     }
 
+    // Affiche une boîte avec la composition d’un médicament
     private void afficherCompositionMedicament(Medicament medicament) {
         List<String> composition = dbm.getCompositionMedicament(medicament.getCodeCIS());
-        //List<String> presentation = dbm.getPresentationMedicament(medicament.getCodeCIS());
 
-        // Afficher la composition du médicament dans une boîte de dialogue ou autre méthode d'affichage
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Composition de " + medicament.getCodeCIS());
+
         StringBuilder compositionText = new StringBuilder();
-
         if (composition.isEmpty()) {
-            compositionText.append("aucune composition disponible pour ce médicament.").append("\n");
+            compositionText.append("aucune composition disponible pour ce médicament.\n");
         } else {
-
             for (String item : composition) {
                 compositionText.append(item).append("\n");
             }
-
-
         }
 
-
-
         builder.setMessage(compositionText.toString());
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setPositiveButton("OK", null);
+        builder.create().show();
     }
-    private void afficherPresentationMedicament(Medicament medicament) {
 
+    // Affiche une boîte avec les présentations d’un médicament
+    private void afficherPresentationMedicament(Medicament medicament) {
         List<String> presentation = dbm.getPresentationMedicament(medicament.getCodeCIS());
 
-        // Afficher la composition du médicament dans une boîte de dialogue ou autre méthode d'affichage
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Présentations de " + medicament.getCodeCIS());
+
         StringBuilder presentationText = new StringBuilder();
-
-
         if (presentation.isEmpty()) {
-            presentationText.append("aucune presentation disponible pour ce médicament.").append("\n");
+            presentationText.append("aucune présentation disponible pour ce médicament.\n");
         } else {
-
             for (String item : presentation) {
                 presentationText.append(item).append("\n");
             }
-
-
         }
+
         builder.setMessage(presentationText.toString());
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setPositiveButton("OK", null);
+        builder.create().show();
     }
-
 }
-

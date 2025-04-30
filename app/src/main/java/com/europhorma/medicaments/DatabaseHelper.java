@@ -1,7 +1,5 @@
 package com.europhorma.medicaments;
 
-
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,48 +16,52 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    // Valeur par défaut pour la sélection de la voie d'administration
     private static final String PREMIERE_VOIE = "selectionnez une voie d'administration";
     private final Context mycontext;
-    private static final String DATABASE_NAME = "medicaments.db";
-    private static final int DATABASE_VERSION = 1;
-    private String DATABASE_PATH ;
-    private SQLiteDatabase database;
+    private static final String DATABASE_NAME = "medicaments.db"; // Nom de la base de données
+    private static final int DATABASE_VERSION = 1; // Version de la base de données
+    private String DATABASE_PATH; // Chemin d'accès à la base
+    private SQLiteDatabase database; // Instance de la base de données SQLite
 
+    // Constructeur de la classe
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.mycontext = context;
-        String filesDir = context.getFilesDir().getPath();
-        DATABASE_PATH = filesDir.substring(0,filesDir.lastIndexOf("/"))+"/databases/";
 
-        if (!checkdatabase()){
-            Log.d("APP","BDD a copier");
+        // Détermine le chemin de la base de données dans le dossier de l'application
+        String filesDir = context.getFilesDir().getPath();
+        DATABASE_PATH = filesDir.substring(0, filesDir.lastIndexOf("/")) + "/databases/";
+
+        // Vérifie si la base existe déjà, sinon la copie depuis les assets
+        if (!checkdatabase()) {
+            Log.d("APP", "BDD a copier");
             copydatabase();
         }
+
+        // Ouvre la base de données
         openDatabase();
     }
 
+    // Vérifie si la base de données a déjà été copiée
     private boolean checkdatabase() {
-        // retourne true/false si la bdd existe dans le dossier de l'app
         File dbfile = new File(DATABASE_PATH + DATABASE_NAME);
-
-        return dbfile.exists();
+        return dbfile.exists(); // Renvoie true si la base de données existe, sinon false
     }
-    private void copydatabase() {
 
+    // Copie la base de données depuis le dossier 'assets' vers le dossier de l'application
+    private void copydatabase() {
         final String outFileName = DATABASE_PATH + DATABASE_NAME;
 
-        //AssetManager assetManager = mycontext.getAssets();
         InputStream myInput;
 
         try {
-            // Ouvre le fichier de la  bdd de 'assets' en lecture
+            // Ouvre la base de données dans les assets
             myInput = mycontext.getAssets().open(DATABASE_NAME);
 
-            // dossier de destination
+            // Crée le dossier s'il n'existe pas
             File pathFile = new File(DATABASE_PATH);
             if (!pathFile.exists()) {
                 if (!pathFile.mkdirs()) {
@@ -68,21 +70,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
 
-            // Ouverture en écriture du fichier bdd de destination
+            // Crée la base de destination
             OutputStream myOutput = new FileOutputStream(outFileName);
 
-            // transfert de inputfile vers outputfile
+            // Transfère les données de l'input vers l'output
             byte[] buffer = new byte[1024];
             int length;
             while ((length = myInput.read(buffer)) > 0) {
                 myOutput.write(buffer, 0, length);
             }
 
-            // Fermeture
-            Log.d("APP", "BDD copiée");
+            // Ferme les flux
             myOutput.flush();
             myOutput.close();
             myInput.close();
+
+            Log.d("APP", "BDD copiée");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,21 +93,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(mycontext, "Erreur : copydatabase()", Toast.LENGTH_SHORT).show();
         }
 
-        // on greffe le numéro de version
+        // Définit la version de la base copiée
         try {
             SQLiteDatabase checkdb = SQLiteDatabase.openDatabase(DATABASE_PATH + DATABASE_NAME, null, SQLiteDatabase.OPEN_READWRITE);
             checkdb.setVersion(DATABASE_VERSION);
         } catch (SQLiteException e) {
-            // bdd n'existe pas
+            // La base n'existe pas encore
         }
-
     }
+
+    // Ouvre la base de données
     public void openDatabase() {
         String dbPath = DATABASE_PATH + DATABASE_NAME;
         database = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
-
+    // Vérifie si une table existe dans la base
     public boolean checkTableExists(String tableName) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name=?", new String[]{tableName});
@@ -113,10 +117,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-
+    // Récupère toutes les voies d'administration distinctes sans point-virgule
     public List<String> getDistinctVoiesAdmin() {
         List<String> voiesAdminList = new ArrayList<>();
-        voiesAdminList.add(PREMIERE_VOIE); // Ajoute la première option
+        voiesAdminList.add(PREMIERE_VOIE); // Ajoute une option par défaut dans la liste
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -136,55 +140,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return voiesAdminList;
     }
 
-
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+        // Pas utilisé car la base est copiée depuis les assets
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        // À implémenter si tu veux gérer une migration plus tard
     }
 
+    // Recherche de médicaments selon plusieurs critères
     public List<Medicament> searchMedicaments(String denomination, String formePharmaceutique, String titulaires, String denominationSubstance, String voiesAdmin, String dateAutorisation) {
         List<Medicament> medicamentList = new ArrayList<>();
         ArrayList<String> selectionArgs = new ArrayList<>();
+
+        // Paramètres de filtre pour la requête SQL
         selectionArgs.add("%" + denomination + "%");
         selectionArgs.add("%" + formePharmaceutique + "%");
         selectionArgs.add("%" + titulaires + "%");
         selectionArgs.add("%" + denominationSubstance + "%");
         selectionArgs.add(dateAutorisation);
-        SQLiteDatabase db = this.getReadableDatabase();
-        String finSQL = "";
-        // String Sql_nbmolecule ="" ;
 
+        String finSQL = "";
         if (!voiesAdmin.equals(PREMIERE_VOIE)) {
-            finSQL = "AND  Voie_dadministration LIKE ?";
+            finSQL = "AND Voie_dadministration LIKE ?";
             selectionArgs.add("%" + voiesAdmin + "%");
         }
-        String SQLSubstance = "SELECT CODE_CIS FROM CIS_COMPO_bdpm WHERE replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(upper(Denomination_substance), 'Â','A'),'Ä','A'),'À','A'),'É','E'),'Á','A'),'Ï','I'), 'Ê','E'),'È','E'),'Ô','O'),'Ü','U'), 'Ç','C' ) LIKE ?";
-//String SQLSubstance = "SELECT CODE_CIS FROM CIS_COMPO_bdpm WHERE Denomination_substance COLLATE latin1_general_cs_ai LIKE ?" ;
 
-        // La requête SQL de recherche
-        String query = "SELECT *,(select count(*) from CIS_COMPO_bdpm c where c.Code_CIS=m.Code_CIS) as nb_molecule FROM CIS_bdpm m  WHERE " +
+        // Recherche du Code_CIS dans la table des composants avec accents normalisés
+        String SQLSubstance = "SELECT CODE_CIS FROM CIS_COMPO_bdpm WHERE replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(upper(Denomination_substance), 'Â','A'),'Ä','A'),'À','A'),'É','E'),'Á','A'),'Ï','I'), 'Ê','E'),'È','E'),'Ô','O'),'Ü','U'), 'Ç','C' ) LIKE ?";
+
+        // Requête principale
+        String query = "SELECT *,(select count(*) from CIS_COMPO_bdpm c where c.Code_CIS=m.Code_CIS) as nb_molecule FROM CIS_bdpm m WHERE " +
                 "Denomination LIKE ? AND " +
                 "Forme_pharmaceutique LIKE ? AND " +
                 "Titulaire LIKE ? AND " +
-                "Code_CIS IN (" + SQLSubstance + ") " +
-               // " AND strftime('%Y',Date_dAMM_2 ) > ? " + // recherche par annee
-                 " AND Date_dAMM_2  >= ?  " + // recherche par date exact
+                "Code_CIS IN (" + SQLSubstance + ") AND " +
+                "Date_dAMM_2 >= ? " +
                 finSQL;
 
-        // Les valeurs à remplacer dans la requête
-
-        Log.d("SQL",query);
+        Log.d("SQL", query);
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, selectionArgs.toArray(new String[0]));
 
-
+        // Traitement des résultats
         if (cursor.moveToFirst()) {
             do {
-                // Récupérer les valeurs de la ligne actuelle
                 int codeCIS = cursor.getInt(cursor.getColumnIndex("Code_CIS"));
                 String denominationMedicament = cursor.getString(cursor.getColumnIndex("Denomination"));
                 String formePharmaceutiqueMedicament = cursor.getString(cursor.getColumnIndex("Forme_pharmaceutique"));
@@ -194,8 +196,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 dateAutorisation = cursor.getString(cursor.getColumnIndex("Date_dAMM_2"));
                 String CountMolecule = cursor.getString(cursor.getColumnIndex("nb_molecule"));
 
-
-                // Créer un objet Medicament avec les valeurs récupérées
+                // Création de l'objet médicament
                 Medicament medicament = new Medicament();
                 medicament.setCodeCIS(codeCIS);
                 medicament.setDenomination(denominationMedicament);
@@ -204,12 +205,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 medicament.setTitulaires(titulairesMedicament);
                 medicament.setStatutAdministratif(statutAdministratif);
                 medicament.setDateAutorisation(dateAutorisation);
-                // medicament.setNb_molecule(CountMolecule.toString());
-                medicament.setNb_molecule(String.valueOf(getNombreMolecules(codeCIS)));
-                // Ajouter l'objet Medicament à la liste
+                medicament.setNb_molecule(String.valueOf(getNombreMolecules(codeCIS))); // ou CountMolecule directement
+
                 medicamentList.add(medicament);
             } while (cursor.moveToNext());
-
         }
 
         cursor.close();
@@ -217,18 +216,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return medicamentList;
     }
+
+    // Récupère le nombre de molécules d'un médicament (via Code_CIS)
     public int getNombreMolecules(int codeCIS) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select count(*) from CIS_COMPO_bdpm  where Code_CIS=?", new String[]{String.valueOf(codeCIS)});
+        Cursor cursor = db.rawQuery("SELECT count(*) FROM CIS_COMPO_bdpm WHERE Code_CIS=?", new String[]{String.valueOf(codeCIS)});
         cursor.moveToFirst();
         int nb = cursor.getInt(0);
-        return (nb);
+        cursor.close();
+        db.close();
+        return nb;
     }
+
+    // Récupère la composition d'un médicament
     public List<String> getCompositionMedicament(int codeCIS) {
         List<String> compositionList = new ArrayList<>();
-
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM CIS_compo_bdpm WHERE Code_CIS = ?", new String[]{String.valueOf(codeCIS)});
+
         int i = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -244,11 +249,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return compositionList;
     }
+
+    // Récupère la présentation d’un médicament
     public List<String> getPresentationMedicament(int codeCIS) {
         List<String> presentationList = new ArrayList<>();
-
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM CIS_CIP_bdpm WHERE Code_CIS = ?", new String[]{String.valueOf(codeCIS)});
+
         int i = 0;
         if (cursor.moveToFirst()) {
             do {
@@ -263,5 +270,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return presentationList;
     }
-
 }

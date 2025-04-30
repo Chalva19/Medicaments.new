@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Déclaration du layout racine en LinearLayout, orientation verticale -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,32 +8,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- Liste des médicaments affichée à l'utilisateur -->
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
+    <!-- Affiche les objets (ex: médicaments) via l'adaptateur (ex: MedicamentAdapter) -->
 
+    <!-- Champ de saisie pour entrer un code visiteur -->
     <EditText
         android:id="@+id/codeVisiteur"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Code Visiteur"
-        android:inputType="text" />
+        android:inputType="text" /> <!-- Type de saisie texte -->
 
+    <!-- Bouton permettant de valider ou rechercher avec le code visiteur -->
     <Button
         android:id="@+id/ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="OK"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp" /> <!-- Marge supérieure pour aérer -->
 
+    <!-- Sous-section du layout dédiée au code temporaire et nom visiteur -->
     <LinearLayout
         android:id="@+id/temporaryCodeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
+        <!-- Champ pour entrer le nom du visiteur -->
         <EditText
             android:id="@+id/nomVisiteur"
             android:layout_width="match_parent"
@@ -40,20 +46,22 @@
             android:hint="Nom Visiteur"
             android:inputType="text" />
 
+        <!-- Champ pour entrer un code temporaire -->
         <EditText
             android:id="@+id/codeTemporaire"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Code"
             android:inputType="text"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp" /> <!-- Petite marge au-dessus pour espacer -->
 
+        <!-- Bouton permettant d'envoyer le nom et code temporaire -->
         <Button
             android:id="@+id/envoye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Envoyé"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp" /> <!-- Marge supérieure pour l'espacement -->
     </LinearLayout>
 
 </LinearLayout>

@@ -1,77 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Layout principal vertical pour afficher les informations d’un médicament -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="#4000D4"
     android:padding="8dp">
+    <!-- Fond bleu violet -->
+    <!-- Affiche le code CIS du médicament -->
+<TextView
+android:id="@+id/tvCodeCIS"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textStyle="bold"
+android:text="Code_CIS: " />
 
-    <TextView
-        android:id="@+id/tvCodeCIS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Code_CIS: " />
+    <!-- Affiche la dénomination (nom) du médicament -->
+<TextView
+android:id="@+id/tvDenomination"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textStyle="bold"
+android:text="Denomination: " />
 
-    <TextView
-        android:id="@+id/tvDenomination"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Denomination: " />
+    <!-- Affiche la forme pharmaceutique (ex : comprimé, gélule...) -->
+<TextView
+android:id="@+id/tvFormePharmaceutique"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Forme_pharmaceutique: " />
 
-    <TextView
-        android:id="@+id/tvFormePharmaceutique"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Forme_pharmaceutique: " />
+    <!-- Affiche les voies d’administration (orale, IV, etc.) -->
+<TextView
+android:id="@+id/tvVoiesAdmin"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Voies_dadministration: " />
 
-    <TextView
-        android:id="@+id/tvVoiesAdmin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voies_dadministration: " />
+    <!-- Affiche le(s) titulaire(s) (fabricants ou exploitants) -->
+<TextView
+android:id="@+id/tvTitulaires"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Titulaires: " />
 
-    <TextView
-        android:id="@+id/tvTitulaires"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Titulaires: " />
-    <TextView
-        android:id="@+id/tvStatutAdministratif"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Staut administratif: " />
+    <!-- Affiche le statut administratif (autorisé, retiré...) -->
+<TextView
+android:id="@+id/tvStatutAdministratif"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Staut administratif: " />
 
-    <TextView
-        android:id="@+id/nb_molecule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="nb_molecule: " />
+<!-- Affiche le nombre de molécules actives dans le médicament -->
+<TextView
+android:id="@+id/nb_molecule"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="nb_molecule: " />
 
-    <TextView
-        android:id="@+id/tvDateAutorisation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Date d'autorisation: " />
+<!-- Affiche la date d’autorisation de mise sur le marché -->
+<TextView
+android:id="@+id/tvDateAutorisation"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Date d'autorisation: " />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-    <Button
-        android:id="@+id/tvCompo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voir Composition"
-        />
-    <Button
-        android:id="@+id/tvPresentation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voir Presentation"
-        />
-    </LinearLayout>
+    <!-- Sous-layout horizontal pour les boutons de composition et présentation -->
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal">
 
+<!-- Bouton pour afficher les composants du médicament -->
+<Button
+    android:id="@+id/tvCompo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Voir Composition" />
+
+<!-- Bouton pour afficher les présentations disponibles du médicament -->
+<Button
+    android:id="@+id/tvPresentation"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Voir Presentation" />
 </LinearLayout>
+
+    </LinearLayout>

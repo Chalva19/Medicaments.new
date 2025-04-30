@@ -11,7 +11,6 @@ public class Medicament {
         private String Nb_Molecule;
         private String dateAutorisation;
 
-    // Constructeur
 
         // Getter et Setter pour codeCIS
         public int getCodeCIS() {

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Layout racine : LinearLayout vertical qui empile les éléments les uns sous les autres -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,27 +8,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-
+    <!-- Barre de haut contenant un bouton de déconnexion aligné à droite -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
+        <!-- Bouton pour se déconnecter -->
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Déconnexion"
-            android:layout_margin="16dp"/>
+            android:layout_margin="16dp"
+            android:text="Déconnexion" />
     </LinearLayout>
 
+    <!-- Première ListView pour afficher une liste de médicaments (ou autre) -->
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <!-- Champ pour la  Dénomination du médicament -->
+        android:layout_height="wrap_content" />
+
+    <!-- Champ de saisie pour la dénomination du médicament -->
     <EditText
         android:id="@+id/editTextDenomination"
         android:layout_width="match_parent"
@@ -35,70 +38,62 @@
         android:hint="Dénomination du médicament"
         android:inputType="text" />
 
-    <!-- Champ pour la forme pharmaceutique -->
+    <!-- Champ de saisie pour la forme pharmaceutique -->
     <EditText
         android:id="@+id/editTextFormePharmaceutique"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="Forme pharmaceutique"
-        android:inputType="text"
-        android:layout_below="@id/editTextDenomination"
-        android:layout_marginTop="8dp" />
+        android:inputType="text" />
 
-    <!-- Champ pour les titulaires -->
+    <!-- Champ de saisie pour le titulaire (fabricant) du médicament -->
     <EditText
         android:id="@+id/editTextTitulaires"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="Titulaire"
-        android:inputType="text"
-        android:layout_below="@id/editTextFormePharmaceutique"
-        android:layout_marginTop="8dp" />
+        android:inputType="text" />
 
-    <!-- Champ pour la dénomination de substance -->
+    <!-- Champ de saisie pour la dénomination de la substance active -->
     <EditText
         android:id="@+id/editTextDenominationSubstance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="Dénomination de substance"
-        android:inputType="text"
-        android:layout_below="@id/editTextTitulaires"
-        android:layout_marginTop="8dp" />
+        android:inputType="text" />
 
+    <!-- Champ pour entrer une date d'autorisation de mise sur le marché -->
     <EditText
         android:id="@+id/editTextDateAutorisation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Date d'autorisation de sortit"
-        android:inputType="text"
-        android:layout_below="@id/editTextDenominationSubstance"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:hint="Date d'autorisation de sortie"
+        android:inputType="text" />
 
-    <!-- Spinner pour les voies d'administration -->
+    <!-- Spinner pour sélectionner une voie d'administration (orale, intraveineuse, etc.) -->
     <Spinner
         android:id="@+id/spinnerVoiesAdmin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextDateAutorisation"
         android:layout_marginTop="8dp" />
 
-    <!-- Bouton de recherche -->
+    <!-- Bouton pour lancer la recherche selon les critères remplis ci-dessus -->
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Rechercher"
-        android:layout_below="@id/spinnerVoiesAdmin"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="Rechercher" />
 
-
-    <!-- Liste des résultats -->
+    <!-- Deuxième ListView pour afficher les résultats de la recherche -->
     <ListView
         android:id="@+id/listViewResults"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnSearch"
         android:layout_marginTop="16dp" />
-
 
 </LinearLayout>
