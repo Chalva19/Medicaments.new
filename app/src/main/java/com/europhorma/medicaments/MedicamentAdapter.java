@@ -70,6 +70,7 @@ public class MedicamentAdapter extends ArrayAdapter<Medicament> {
         TextView tvDateAutorisation = convertView.findViewById(R.id.tvDateAutorisation);
         Button tvCompo = convertView.findViewById(R.id.tvCompo);
         Button tvPresentation = convertView.findViewById(R.id.tvPresentation);
+        TextView generic = convertView.findViewById(R.id.generic);
 
         // Remplissage des champs TextView avec les informations du médicament
         tvCodeCIS.setText("CIS: " + String.valueOf(medicament.getCodeCIS()));
@@ -79,6 +80,7 @@ public class MedicamentAdapter extends ArrayAdapter<Medicament> {
         tvTitulaires.setText("Fabricant : " + medicament.getTitulaires());
         tvStatutadministratif.setText("Statut Administratif : " + medicament.getStatutAdministratif());
         tvDateAutorisation.setText("Date d'autorisation : " + medicament.getDateAutorisation());
+        generic.setText("GENERIQUE");
 
         // Affiche le nombre de molécules avec gestion du pluriel
         tvNb_Molecule.setText("Nombre de molécule(s) : " + medicament.getNb_molecule() + pluriels(Integer.parseInt(medicament.getNb_molecule()), " molécule"));

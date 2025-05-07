@@ -7,7 +7,7 @@ public class Medicament {
         private String voiesAdmin;
         private String titulaires;
         private String statutAdministratif;
-
+        private String generic;
         private String Nb_Molecule;
         private String dateAutorisation;
 
@@ -29,6 +29,15 @@ public class Medicament {
         public void setDenomination(String denomination) {
 
             this.denomination = denomination;
+        }
+
+        public String getGeneric() {
+            return generic;
+        }
+
+        public void setGeneric(String generic) {
+
+            this.generic = generic;
         }
 
         // Getter et Setter pour formePharmaceutique

@@ -65,6 +65,12 @@ android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:text="Date d'autorisation: " />
 
+    <TextView
+        android:id="@+id/generic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+
     <!-- Sous-layout horizontal pour les boutons de composition et présentation -->
 <LinearLayout
 android:layout_width="match_parent"
