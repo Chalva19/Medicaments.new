@@ -207,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 medicament.setStatutAdministratif(statutAdministratif);
                 medicament.setDateAutorisation(dateAutorisation);
                 medicament.setNb_molecule(String.valueOf(getNombreMolecules(codeCIS))); // ou CountMolecule directement
-                if (cursor.getInt(cursor.getColumnIndex("Generic"))>0){
+                if (cursor.getInt(cursor.getColumnIndex("Type_generique"))>0){
                     medicament.setGeneric("GENERIQUE");
                 }
 
