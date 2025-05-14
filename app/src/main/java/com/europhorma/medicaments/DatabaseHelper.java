@@ -172,7 +172,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String SQLSubstance = "SELECT CODE_CIS FROM CIS_COMPO_bdpm WHERE replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(upper(Denomination_substance), 'Â','A'),'Ä','A'),'À','A'),'É','E'),'Á','A'),'Ï','I'), 'Ê','E'),'È','E'),'Ô','O'),'Ü','U'), 'Ç','C' ) LIKE ?";
 
         // Requête principale
-        String query = "SELECT *,(select count(*) from CIS_COMPO_bdpm c where c.Code_CIS=m.Code_CIS) as nb_molecule, (select count(*) from CIS_GENER_bdpm g where g.Code_CIS=m.Code_CIS) as Generique FROM CIS_bdpm m WHERE " +
+        String query = "SELECT *,(select count(*) from CIS_COMPO_bdpm c where c.Code_CIS=m.Code_CIS) as nb_molecule, (select count(*) from CIS_GENER_bdpm g where g.Code_CIS=m.Code_CIS) as Generic FROM CIS_bdpm m WHERE " +
                 "Denomination LIKE ? AND " +
                 "Forme_pharmaceutique LIKE ? AND " +
                 "Titulaire LIKE ? AND " +
@@ -207,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 medicament.setStatutAdministratif(statutAdministratif);
                 medicament.setDateAutorisation(dateAutorisation);
                 medicament.setNb_molecule(String.valueOf(getNombreMolecules(codeCIS))); // ou CountMolecule directement
-                if (cursor.getInt(cursor.getColumnIndex("Type_generique"))>0){
+                if (cursor.getInt(cursor.getColumnIndex("Generic"))>0){
                     medicament.setGeneric("GENERIQUE");
                 }
 

@@ -8,21 +8,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Barre de haut contenant un bouton de déconnexion aligné à droite -->
+    <!-- Barre de haut contenant un bouton de déconnexion aligné à droite-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
         android:orientation="horizontal">
 
-        <!-- Bouton pour se déconnecter -->
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="Déconnexion" />
-    </LinearLayout>
+        <!--Bouton pour se déconnecter-->
+       <Button
+           android:id="@+id/btnLogout"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_margin="16dp"
+           android:text="Déconnexion" />
+
+   </LinearLayout>
+
 
     <!-- Première ListView pour afficher une liste de médicaments (ou autre) -->
     <ListView

@@ -80,7 +80,7 @@ public class MedicamentAdapter extends ArrayAdapter<Medicament> {
         tvTitulaires.setText("Fabricant : " + medicament.getTitulaires());
         tvStatutadministratif.setText("Statut Administratif : " + medicament.getStatutAdministratif());
         tvDateAutorisation.setText("Date d'autorisation : " + medicament.getDateAutorisation());
-        generic.setText("GENERIQUE");
+        generic.setText(medicament.getGeneric());
 
         // Affiche le nombre de molécules avec gestion du pluriel
         tvNb_Molecule.setText("Nombre de molécule(s) : " + medicament.getNb_molecule() + pluriels(Integer.parseInt(medicament.getNb_molecule()), " molécule"));
