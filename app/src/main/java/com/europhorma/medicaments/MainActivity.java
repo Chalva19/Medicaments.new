@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextDenominationSubstance, editTextTitulaires, editTextFormePharmaceutique,
             editTextDenomination, editTextDateAutorisation;
     ListView listViewResults;
+    CheckBox afficheGenerique;
 
     // Constantes pour la gestion de la session utilisateur
     private static final String PREF_NAME = "UserPrefs";
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         editTextFormePharmaceutique = findViewById(R.id.editTextFormePharmaceutique);
         editTextDateAutorisation = findViewById(R.id.editTextDateAutorisation);
         listViewResults = findViewById(R.id.listViewResults);
+        //afficheGenerique = findViewById(R.id.afficheGenerique);
 
         // Remplissage du spinner avec les voies d'administration
         setupVoiesAdminSpinner();
@@ -125,12 +128,13 @@ public class MainActivity extends AppCompatActivity {
         String denominationSubstance = removeAccents(editTextDenominationSubstance.getText().toString().trim());
         String dateAutorisation = editTextDateAutorisation.getText().toString().trim();
         String voiesAdmin = spinnerVoiesAdmin.getSelectedItem().toString();
+        //boolean generic = afficheGenerique.isChecked() ;
 
         cacherClavier(); // Ferme le clavier après clic
 
         // Récupère les résultats depuis la BDD
         List<Medicament> searchResults = dbm.searchMedicaments(denomination, formePharmaceutique, titulaires, denominationSubstance, voiesAdmin, dateAutorisation);
-
+        // ajouter "generic " dans l'envoie des resultat
         // Affiche les résultats dans la ListView via un adapter personnalisé
         MedicamentAdapter medicamentAdapter = new MedicamentAdapter(this, searchResults);
         listViewResults.setAdapter(medicamentAdapter);

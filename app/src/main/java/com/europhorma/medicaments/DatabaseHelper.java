@@ -151,7 +151,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Recherche de médicaments selon plusieurs critères
-    public List<Medicament> searchMedicaments(String denomination, String formePharmaceutique, String titulaires, String denominationSubstance, String voiesAdmin, String dateAutorisation) {
+    // ajouter boolean generic dans searchMedicaments
+    public List<Medicament> searchMedicaments(String denomination, String formePharmaceutique, String titulaires, String denominationSubstance, String voiesAdmin, String dateAutorisation  ) {
         List<Medicament> medicamentList = new ArrayList<>();
         ArrayList<String> selectionArgs = new ArrayList<>();
 
@@ -171,6 +172,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Recherche du Code_CIS dans la table des composants avec accents normalisés
         String SQLSubstance = "SELECT CODE_CIS FROM CIS_COMPO_bdpm WHERE replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(upper(Denomination_substance), 'Â','A'),'Ä','A'),'À','A'),'É','E'),'Á','A'),'Ï','I'), 'Ê','E'),'È','E'),'Ô','O'),'Ü','U'), 'Ç','C' ) LIKE ?";
 
+        /*String affichegeneric = "";
+        if (generic) {
+            affichegeneric = " AND m.Code_CIS IN ( SELECT CODE_CIS FROM CIS_GENER_bdpm )";
+        }*/
+
         // Requête principale
         String query = "SELECT *,(select count(*) from CIS_COMPO_bdpm c where c.Code_CIS=m.Code_CIS) as nb_molecule, (select count(*) from CIS_GENER_bdpm g where g.Code_CIS=m.Code_CIS) as Generic FROM CIS_bdpm m WHERE " +
                 "Denomination LIKE ? AND " +
@@ -179,6 +185,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "Code_CIS IN (" + SQLSubstance + ") AND " +
                 "Date_dAMM_2 >= ? " +
                 finSQL;
+                //affichegeneric;
 
         Log.d("SQL", query);
         SQLiteDatabase db = this.getReadableDatabase();

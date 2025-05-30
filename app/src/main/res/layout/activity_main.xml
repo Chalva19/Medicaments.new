@@ -83,7 +83,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp" />
 
-    <!-- Bouton pour lancer la recherche selon les critères remplis ci-dessus -->
+    <!--<CheckBox
+       android:id="@+id/afficheGenerique"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="Afficher que generique"
+       android:layout_marginTop="8dp"/> -->
+
+
+   <!-- Bouton pour lancer la recherche selon les critères remplis ci-dessus -->
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="match_parent"

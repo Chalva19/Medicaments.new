@@ -13,7 +13,7 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <!-- Affiche les objets (ex: médicaments) via l'adaptateur (ex: MedicamentAdapter) -->
+
 
     <!-- Champ de saisie pour entrer un code visiteur -->
     <EditText
@@ -21,15 +21,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Code Visiteur"
-        android:inputType="text" /> <!-- Type de saisie texte -->
+        android:inputType="text"
+        android:layout_marginTop="16dp" />
+
 
     <!-- Bouton permettant de valider ou rechercher avec le code visiteur -->
     <Button
         android:id="@+id/ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OK"
-        android:layout_marginTop="16dp" /> <!-- Marge supérieure pour aérer -->
+        android:layout_marginTop="16dp"
+        android:text="OK" /> <!-- Marge supérieure pour aérer -->
 
     <!-- Sous-section du layout dédiée au code temporaire et nom visiteur -->
     <LinearLayout
@@ -51,17 +53,17 @@
             android:id="@+id/codeTemporaire"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Code"
-            android:inputType="text"
-            android:layout_marginTop="8dp" /> <!-- Petite marge au-dessus pour espacer -->
+            android:inputType="text" /> <!-- Petite marge au-dessus pour espacer -->
 
         <!-- Bouton permettant d'envoyer le nom et code temporaire -->
         <Button
             android:id="@+id/envoye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Envoyé"
-            android:layout_marginTop="16dp" /> <!-- Marge supérieure pour l'espacement -->
+            android:layout_marginTop="16dp"
+            android:text="Envoyé" /> <!-- Marge supérieure pour l'espacement -->
     </LinearLayout>
 
 </LinearLayout>
